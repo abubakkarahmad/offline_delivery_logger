@@ -60,7 +60,7 @@ class DeliveriesListScreen extends StatelessWidget {
           }
         },
         icon: const Icon(Icons.picture_as_pdf),
-        label: const Text('Completed Report'),
+        label: const Text('Completed Report'),backgroundColor: Colors.white60,
       ),
       body: RefreshIndicator(
         onRefresh: () => list.refresh(),
