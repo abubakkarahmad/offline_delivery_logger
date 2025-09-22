@@ -3,6 +3,7 @@ import 'package:offline_delivery_logger/presentation/controllers/delivery_list_c
 import 'package:offline_delivery_logger/presentation/controllers/export_controller.dart';
 import 'package:offline_delivery_logger/presentation/controllers/offline_controller.dart';
 import 'package:offline_delivery_logger/presentation/screens/delivery_detail_screen.dart';
+import 'package:offline_delivery_logger/presentation/widgets/custom_text.dart';
 import 'package:offline_delivery_logger/presentation/widgets/delivery_card.dart';
 import 'package:provider/provider.dart';
 
@@ -17,7 +18,14 @@ class DeliveriesListScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Deliveries'),
+        centerTitle: false,
+        title: Column(
+         crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomText(text: "Deliveries",color: Colors.black,fontWeight: FontWeight.w600,),
+            CustomText(text: "Queued: ${offline.queued}",color: Colors.black,fontSize: 12,),
+          ],
+        ),
         actions: [
           Row(
             children: [
@@ -27,23 +35,8 @@ class DeliveriesListScreen extends StatelessWidget {
               ),
               const SizedBox(width: 4),
               Text(offline.isOffline ? 'Offline' : 'Online'),
-              const SizedBox(width: 8),
               if (list.queued > 0 || offline.queued > 0)
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.black12,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    'Queued: ${offline.queued}',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 6),
               Switch(
                 value: offline.isOffline,
                 onChanged: (_) => offline.toggle(context),

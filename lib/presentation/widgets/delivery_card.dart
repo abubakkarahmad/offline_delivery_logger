@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:offline_delivery_logger/presentation/widgets/custom_text.dart';
 import '../../domain/entities/delivery.dart';
 
 class DeliveryCard extends StatelessWidget {
@@ -17,20 +18,38 @@ class DeliveryCard extends StatelessWidget {
     };
 
     return Card(
+      color: Colors.white24,
       child: ListTile(
         onTap: onTap,
-        title: Text('${delivery.id} • ${delivery.customer}'),
-        subtitle: Text(delivery.address),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomText(
+              text: delivery.customer,
+              fontSize: 14,
+              color: Colors.black,
+              fontWeight: FontWeight.w700,
+            ),
+            CustomText(text: delivery.id, fontSize: 12, color: Colors.black),
+          ],
+        ),
+        subtitle: CustomText(
+          text: delivery.address,
+          fontSize: 12,
+          color: Colors.black,
+        ),
         trailing: Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
-            color: statusColor.withValues(alpha: 0.15),
-            borderRadius: BorderRadius.circular(12),
+            color: statusColor.withValues(alpha: 0.10),
+            borderRadius: BorderRadius.circular(6),
             border: Border.all(color: statusColor),
           ),
-          child: Text(
-            delivery.status.name,
-            style: TextStyle(color: statusColor, fontWeight: FontWeight.bold),
+          child: CustomText(
+            text: delivery.status.name,
+            fontSize: 12,
+            color: Colors.black38,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),

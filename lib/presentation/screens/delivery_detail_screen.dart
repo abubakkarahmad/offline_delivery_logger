@@ -3,6 +3,9 @@ import 'package:offline_delivery_logger/domain/entities/delivery.dart';
 import 'package:offline_delivery_logger/domain/entities/delivery_event.dart';
 import 'package:offline_delivery_logger/domain/entities/delivery_status.dart';
 import 'package:offline_delivery_logger/presentation/controllers/delivery_details_controller.dart';
+import 'package:offline_delivery_logger/presentation/widgets/custom_buttons.dart'
+    show CustomButton;
+import 'package:offline_delivery_logger/presentation/widgets/custom_text.dart';
 import 'package:provider/provider.dart';
 
 class DeliveryDetailScreen extends StatefulWidget {
@@ -40,70 +43,97 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('${d.id} - ${d.customer}'),
+        centerTitle: true,
+        title: const CustomText(
+          text: "Delivery",
+          color: Colors.black,
+          fontWeight: FontWeight.w700,
+        ),
         leading: BackButton(onPressed: () => Navigator.pop(context)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: ListView(
           children: [
-            Text(d.address, style: Theme.of(context).textTheme.titleMedium),
-            if (d.notes != null)
-              Text(
-                'Notes: ${d.notes!}',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            const SizedBox(height: 16),
+            CustomText(
+              text: d.customer,
+              color: Colors.black,
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+            ),
+            CustomText(text: d.id, color: Colors.black, fontSize: 12),
+            const SizedBox(height: 20),
+            CustomText(
+              text: d.address,
+              color: Colors.black,
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
+            d.notes != null
+                ? CustomText(
+                    text: "Notes: ${d.notes!}",
+                    color: Colors.black,
+                    fontSize: 12,
+                  )
+                : const CustomText(
+                    text: "Notes: ${""}",
+                    color: Colors.black,
+                    fontSize: 12,
+                  ),
             Row(
               children: [
-                const Text(
-                  'Status:',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                const CustomText(
+                  text: "Status:",
+                  color: Colors.black,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
                 ),
-                const SizedBox(width: 8),
-                Text(d.status.name),
+
+                const SizedBox(width: 4),
+                CustomText(
+                  text: d.status.name,
+                  color: Colors.black,
+                  fontSize: 12,
+                ),
               ],
             ),
             const SizedBox(height: 24),
-            Text('Events', style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 8),
+            const CustomText(
+              text: "Events",
+              color: Colors.black,
+              fontWeight: FontWeight.w600,
+              fontSize: 12,
+            ),
             if (d.events.isEmpty)
-              const Text('No events yet.')
+              const CustomText(
+                text: "No events yet",
+                color: Colors.black,
+                fontSize: 12,
+              )
             else
               ...d.events.map((e) => _eventTile(e)),
           ],
         ),
       ),
       bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Row(
-            children: [
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: canStart ? () => _handleStart(context) : null,
-                  icon: const Icon(Icons.play_arrow),
-                  label: const Text('Start Delivery'),
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(48),
-                  ),
-                ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (canStart)
+              CustomButton(
+                title: "Start Delivery",
+                subtitle: "Begin this delivery process",
+                icon: Icons.play_arrow,
+                onTap: () => _handleStart(context),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: canComplete
-                      ? () => _handleComplete(context)
-                      : null,
-                  icon: const Icon(Icons.check_circle),
-                  label: const Text('Complete'),
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(48),
-                  ),
-                ),
+            if (canComplete)
+              CustomButton(
+                title: "Complete",
+                subtitle: "Mark this delivery as completed",
+                icon: Icons.check_circle,
+                onTap: () => _handleComplete(context),
               ),
-            ],
-          ),
+          ],
         ),
       ),
     );
@@ -111,10 +141,16 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
 
   Widget _eventTile(DeliveryEvent e) {
     return Card(
+      color: Colors.white24,
       child: ListTile(
-        title: Text(e.status.name),
+        title: CustomText(
+          text: e.status.name,
+          color: Colors.black,
+          fontSize: 12,
+          fontWeight: FontWeight.w700,
+        ),
         subtitle: Text(
-          '${e.at.toUtc()}  •  (${e.lat.toStringAsFixed(4)}, ${e.lng.toStringAsFixed(4)})',
+          '${e.at.toUtc()}\n(${e.lat.toStringAsFixed(4)}, ${e.lng.toStringAsFixed(4)})',
         ),
       ),
     );
